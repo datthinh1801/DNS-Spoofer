@@ -1,6 +1,6 @@
 #! /bin/python
 
-from NetfilterQueue import NetfilterQueue
+from netfilterqueue import NetfilterQueue
 import subprocess
 
 
@@ -9,10 +9,10 @@ def process_packet(packet):
     packet.accept()
 
 
-subprocess.run("sudo iptables -I FORWARD -j NFQUEUE --queue-num 0")
+subprocess.call("sudo iptables -I FORWARD -j NFQUEUE --queue-num 0", shell=True)
 try:
     queue = NetfilterQueue()
     queue.bind(0, process_packet)
     queue.run()
 except KeyboardInterrupt:
-    subprocess.run("sudo iptables --flush")
+    subprocess.call("sudo iptables --flush", shell=True)
